@@ -1,0 +1,16 @@
+# IDEs
+.vscode/
+.idea/
+.metadata/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.log
+*.tmp
+
+# Build outputs from all modules
+target/
+build/
