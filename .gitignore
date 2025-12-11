@@ -14,3 +14,5 @@ Thumbs.db
 
 # Local database / temp files
 product-service/data/mongodb/
+order-service/docker/mysql/
+inventory-service/docker/mysql/
