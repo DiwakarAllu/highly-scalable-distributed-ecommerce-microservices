@@ -1,9 +1,10 @@
-# Maven build outputs
-target/
-.mvn/wrapper/maven-wrapper.jar
+# Ignore everything by default
+*
 
-# Local MongoDB data
-data/mongodb/
+# Allow these specific folders/files
+!src/
+!pom.xml
+!docker-compose.yml
 
-# Ignore IntelliJ specific files if you want
-*.iml
+# Optionally, allow .gitignore itself
+!.gitignore
