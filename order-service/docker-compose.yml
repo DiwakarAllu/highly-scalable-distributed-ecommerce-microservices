@@ -1,12 +1,12 @@
-version: '4'
 services:
-  mysql:
+  order-db:
     image: mysql:8.3.0
-    container_name: mysql
+    container_name: order-db
     ports:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: order_service
     volumes:
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./docker/mysql/data:/var/lib/mysql

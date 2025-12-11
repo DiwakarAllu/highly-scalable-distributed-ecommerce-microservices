@@ -8,15 +8,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import org.springframework.context.annotation.Import;
 import org.testcontainers.containers.MySQLContainer;
+
+import com.diwakarallu.ecommerce.order.stubs.InventoryStubs;
 
 import io.restassured.RestAssured;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, 
+properties = "spring.profiles.active=test")
+@AutoConfigureWireMock(port=0)
 class OrderServiceApplicationTests {
 
-	@ServiceConnection
-	static MySQLContainer mySQLContainer = new MySQLContainer("mysql:8.3.0");
+//	@ServiceConnection
+//	static MySQLContainer<?> mySQLContainer = new MySQLContainer("mysql:8.3.0");
+	
 	@LocalServerPort
 	private Integer port;
 
@@ -26,9 +33,9 @@ class OrderServiceApplicationTests {
 		RestAssured.port = port;
 	}
 
-	static {
-		mySQLContainer.start();
-	}
+//	static {
+//		mySQLContainer.start();
+//	}
 
 	@Test
 	void shouldSubmitOrder() {
@@ -40,6 +47,8 @@ class OrderServiceApplicationTests {
 				}
 				""";
 
+		InventoryStubs.stubInventoryCall("iphone_15", 1);
+		
 		var responseBodyString = RestAssured.given()
 				.contentType("application/json")
 				.body(submitOrderJson)

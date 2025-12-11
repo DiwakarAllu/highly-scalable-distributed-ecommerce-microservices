@@ -29,9 +29,10 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<spring-cloud.version>2023.0.1</spring-cloud.version>
 	</properties>
 	<dependencies>
-	   <dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
@@ -68,7 +69,7 @@
 		<!--
 			Flyway MySQL: JDBC driver specific to Flyway for MySQL databases.
 			Ensures compatibility for running migrations on MySQL/MariaDB.
-		--> 
+		-->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
@@ -77,7 +78,8 @@
 		<!--
 			MySQL Connector/J: The actual JDBC driver that allows the Java application
 			to physically connect and communicate with the MySQL database server.
-			Scope is set to 'runtime' as it is only needed when the application is running, not compiling.
+			Scope is set to 'runtime' as it is only needed when the application is running,
+		not compiling.
 		-->
 		<dependency>
 			<groupId>com.mysql</groupId>
@@ -85,7 +87,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -93,7 +95,8 @@
 		</dependency>
 
 		<!--
-			Spring Boot Starter Test: The primary dependency for testing Spring Boot applications.
+			Spring Boot Starter Test: The primary dependency for testing Spring Boot
+		applications.
 			Includes JUnit 5, Mockito, AssertJ, Spring Test, and more.
 			Scope is 'test' as it is only used during testing phases.
 		-->
@@ -105,7 +108,8 @@
 
 		<!--
 			Spring Boot Testcontainers Support: Provides auto-configuration and integration
-			for Testcontainers within Spring Boot tests using the @ServiceConnection annotation.
+			for Testcontainers within Spring Boot tests using the @ServiceConnection
+		annotation.
 			Simplifies wiring test containers to application context properties.
 			Scope is 'test'.
 		-->
@@ -139,7 +143,8 @@
 
 		<!--
 			REST Assured: A library for testing REST APIs. Used to make HTTP requests
-			to the running application during the integration tests and assert the responses.
+			to the running application during the integration tests and assert the
+		responses.
 		-->
 		<dependency>
 			<groupId>io.rest-assured</groupId>
@@ -147,7 +152,30 @@
 			<version>5.3.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
+
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<plugins>

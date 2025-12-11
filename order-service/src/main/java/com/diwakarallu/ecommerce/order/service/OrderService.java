@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.diwakarallu.ecommerce.order.client.InventoryClient;
 import com.diwakarallu.ecommerce.order.dto.OrderRequest;
 import com.diwakarallu.ecommerce.order.model.Order;
 import com.diwakarallu.ecommerce.order.repository.OrderRepository;
@@ -16,10 +17,17 @@ import java.util.UUID;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final InventoryClient inventoryClient;
 
     public void placeOrder(OrderRequest orderRequest) {
-        var order = mapToOrder(orderRequest);
-        orderRepository.save(order);
+    	var isProductInStock = inventoryClient.isInStock(orderRequest.skuCode(), orderRequest.quantity());
+    	
+    	if(isProductInStock) {
+	        var order = mapToOrder(orderRequest);
+	        orderRepository.save(order);
+        }else {
+        	throw new RuntimeException("Product out of Stock");
+        }
     }
 
     private static Order mapToOrder(OrderRequest orderRequest) {
