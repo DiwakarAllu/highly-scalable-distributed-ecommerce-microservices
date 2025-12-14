@@ -1,38 +1,30 @@
 server:
-  port: 9000
-  forward-headers-strategy: native
+  port: 9000 # gateway server port
+  forward-headers-strategy: native # handle forwarded headers
 
 spring:
   application:
-    name: api-gateway
+    name: api-gateway # application name
 
   main:
-    web-application-type: reactive
-
-
-  # REDIS (Rate Limiting)
-
-  # data:
-  #   redis:
-  #     host: localhost
-  #     port: 6379
+    web-application-type: reactive # use reactive web stack
 
   # Security (Keycloak JWT)
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8181/realms/ecommerce-realm
+          issuer-uri: http://localhost:8181/realms/ecommerce-realm # JWT issuer URI
 
   cloud:
     gateway:
-      # GLOBAL CORS
+      # global CORS configuration
       globalcors:
         add-to-simple-url-handler-mapping: true
         corsConfigurations:
           "[/**]":
             allowedOrigins:
-              - "*" 
+              - "*"
             allowedMethods:
               - GET
               - POST
@@ -42,35 +34,27 @@ spring:
               - OPTIONS
             allowedHeaders:
               - "*"
-#            allowCredentials: true
+      #            allowCredentials: true # uncomment if credentials are needed
 
-      # ROUTES
-
+      # Routes to downstream services
       routes:
-
-     
+        # Product service route
         - id: product-service
           uri: http://localhost:8080
           predicates:
             - Path=/api/products/**
           filters:
-            # - name: RequestRateLimiter
-            #   args:
-            #     redis-rate-limiter.replenishRate: 10
-            #     redis-rate-limiter.burstCapacity: 20
-            #     key-resolver: "#{@userKeyResolver}"
-
             - name: CircuitBreaker
               args:
                 name: productServiceCircuit
                 fallbackUri: forward:/fallback/products
-
             - name: Retry
               args:
                 retries: 3
                 statuses: BAD_GATEWAY,GATEWAY_TIMEOUT
                 methods: GET
 
+        # Product service Swagger aggregation
         - id: product-service-swagger
           uri: http://localhost:8080
           predicates:
@@ -78,7 +62,8 @@ spring:
           filters:
             - SetPath=/api-docs
             - AddResponseHeader=Content-Type, application/json
-    
+
+        # Order service route
         - id: order-service
           uri: http://localhost:8081
           predicates:
@@ -89,6 +74,7 @@ spring:
                 name: orderServiceCircuit
                 fallbackUri: forward:/fallback/orders
 
+        # Order service Swagger aggregation
         - id: order-service-swagger
           uri: http://localhost:8081
           predicates:
@@ -97,7 +83,7 @@ spring:
             - SetPath=/api-docs
             - AddResponseHeader=Content-Type, application/json
 
-       
+        # Inventory service route
         - id: inventory-service
           uri: http://localhost:8082
           predicates:
@@ -108,7 +94,7 @@ spring:
                 name: inventoryServiceCircuit
                 fallbackUri: forward:/fallback/inventory
 
-
+        # Inventory service Swagger aggregation
         - id: inventory-service-swagger
           uri: http://localhost:8082
           predicates:
@@ -117,9 +103,7 @@ spring:
             - SetPath=/api-docs
             - AddResponseHeader=Content-Type, application/json
 
-
-# RESILIENCE4J
-
+# RESILIENCE4J configuration
 resilience4j:
   circuitbreaker:
     configs:
@@ -137,15 +121,14 @@ resilience4j:
     configs:
       default:
         timeoutDuration: 3s
+
   retry:
     configs:
       default:
         maxAttempts: 3
         waitDuration: 2s
 
-
-# SWAGGER (GATEWAY)
-
+# Swagger / OpenAPI aggregation through gateway
 springdoc:
   api-docs:
     enabled: true
@@ -161,20 +144,20 @@ springdoc:
       - name: Inventory Service
         url: /aggregate/inventory-service/api-docs
 
-# LOGGING
+# logging level for gateway
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
 
-# Actuator Endpoints
+# actuator endpoints configuration
 management:
   health:
     circuitbreakers:
-      enabled: true
+      enabled: true # include circuitbreaker health
   endpoints:
     web:
       exposure:
-        include: "*" # exposes all endpoints
+        include: "*" # expose all endpoints
   endpoint:
     health:
       show-details: always # show full health details
