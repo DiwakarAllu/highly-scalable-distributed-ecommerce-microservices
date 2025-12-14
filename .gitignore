@@ -1,22 +1,58 @@
 # Build outputs
-target/
-build/
+**/target/
+**/build/
 
-# IDE files
+# IDE / Editor files
 .vscode/
 .idea/
 .metadata/
 *.iml
 
-# OS files
+# OS / System files
 .DS_Store
 Thumbs.db
 
-# Local database / temp files
+# Environment & secrets 
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+**/*.crt
+**/secrets/
+
+# Local databases & runtime data
+**/data/
+**/db-data/
+**/mongo-data/
+**/mysql-data/
+**/postgres-data/
+**/volume-data/
+
+# Service-specific local volumes 
 product-service/data/mongodb/
 order-service/docker/mysql/
 inventory-service/docker/mysql/
-# Docker volume data and secrets should not be committed
-api-gateway/volume-data/
-api-gateway/secrets/
-api-gateway/docker/
+
+# Docker runtime & secrets
+**/docker/volume-data/
+**/docker/secrets/
+**/docker/tmp/
+
+# Logs
+**/logs/
+**/*.log
+
+# Test & coverage reports
+**/coverage/
+**/jacoco/
+**/*.exec
+
+
+# Temporary files
+**/tmp/
+**/*.tmp
+**/*.swp
+
+# ignore all .gitignore and .gitattributes files in subfolders
+**/.gitignore
+**/.gitattributes
