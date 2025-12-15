@@ -56,3 +56,20 @@ inventory-service/docker/mysql/
 # ignore all .gitignore and .gitattributes files in subfolders
 **/.gitignore
 **/.gitattributes
+
+# Maven
+**/target/
+
+# IDE (Eclipse / STS / IntelliJ / VSCode)
+**/.classpath
+**/.project
+**/.settings/
+**/.factorypath
+.idea/
+.vscode/
+
+# Logs
+**/*.log
+
+# OS
+.DS_Store
