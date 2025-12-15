@@ -11,14 +11,9 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
-        private final String[] freeResourceUrls = {
-                        "/swagger-ui.html",
-                        "/swagger-ui/**",
-                        "/api-docs/**",
-                        "/swagger-resources/**",
-                        "/aggregate/**",
-                        "/eureka/**"
-        };
+        private final String[] freeResourceUrls = { "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**",
+                        "/swagger-resources/**", "/api-docs/**", "/aggregate/**", "/actuator/**",
+                        "/actuator/prometheus" };
 
         @Bean
         public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
