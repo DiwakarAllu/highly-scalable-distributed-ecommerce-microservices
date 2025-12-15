@@ -65,6 +65,7 @@ inventory-service/docker/mysql/
 **/.project
 **/.settings/
 **/.factorypath
+**/HELP.md
 .idea/
 .vscode/
 
