@@ -149,15 +149,29 @@ logging:
   level:
     org.springframework.cloud.gateway: DEBUG
 
-# actuator endpoints configuration
+# Actuator Endpoints
 management:
   health:
     circuitbreakers:
-      enabled: true # include circuitbreaker health
+      enabled: true
   endpoints:
     web:
       exposure:
-        include: "*" # expose all endpoints
+        include: "*"
   endpoint:
     health:
-      show-details: always # show full health details
+      show-details: always
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  observations:
+    key-values:
+      application: api-gateway
+  tracing:
+    sampling:
+      probability: 1.0
+
+
+# Loki URL
+loki.url: http://localhost:3100/loki/api/v1/push
