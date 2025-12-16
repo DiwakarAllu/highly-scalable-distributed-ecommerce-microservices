@@ -40,12 +40,12 @@ public class ProductController {
                 .stream()
                 .map(product -> ProductMapper.toResponse(product))
                 .collect(Collectors.toList());
-//        try {
-//			Thread.sleep(5000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+        // try {
+        // Thread.sleep(5000);
+        // } catch (InterruptedException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
         return ResponseEntity.ok(response);
     }
 
@@ -72,5 +72,33 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/search/price")
+    public ResponseEntity<List<ProductResponse>> getProductsByPriceRange(
+            @RequestParam java.math.BigDecimal min,
+            @RequestParam java.math.BigDecimal max) {
+
+        List<ProductResponse> response = productService.getProductsByPriceRange(min, max)
+                .stream()
+                .map(ProductMapper::toResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponse>> searchProducts(@RequestParam String keyword) {
+        List<ProductResponse> response = productService.searchProducts(keyword)
+                .stream()
+                .map(ProductMapper::toResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/sku/{skuCode}")
+    public ResponseEntity<ProductResponse> getProductBySku(@PathVariable String skuCode) {
+        Product product = productService.getProductBySku(skuCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with SKU " + skuCode));
+        return ResponseEntity.ok(ProductMapper.toResponse(product));
     }
 }

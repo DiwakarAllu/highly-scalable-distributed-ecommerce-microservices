@@ -6,8 +6,10 @@ import com.diwakarallu.ecommerce.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+
 // Service ideally deals with entities,and controller maps to DTOs.
 @Service
 @RequiredArgsConstructor
@@ -30,7 +32,6 @@ public class ProductServiceImpl implements ProductService {
                 return productRepository.findById(id);
         }
 
-
         @Override
         public void deleteProduct(String id) {
                 if (!productRepository.existsById(id)) {
@@ -38,7 +39,6 @@ public class ProductServiceImpl implements ProductService {
                 }
                 productRepository.deleteById(id);
         }
-
 
         @Override
         public Product updateProduct(String id, Product updatedProduct) {
@@ -51,5 +51,22 @@ public class ProductServiceImpl implements ProductService {
                                         return productRepository.save(existing);
                                 })
                                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id " + id));
+
+        }
+
+        @Override
+        public List<Product> getProductsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
+                return productRepository.findByPriceBetween(minPrice, maxPrice);
+        }
+
+        @Override
+        public List<Product> searchProducts(String keyword) {
+                return productRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword,
+                                keyword);
+        }
+
+        @Override
+        public Optional<Product> getProductBySku(String skuCode) {
+                return productRepository.findBySkuCode(skuCode);
         }
 }
